@@ -11,6 +11,9 @@ class Screen extends JPanel{
     private int scale = 3; //10 pixels for each emulated-system pixel.
     private int width = 224 * scale;
     private int height = 256 * scale;
+    private int slot;
+    private String s;
+    private int time_left;
     //Random random = new Random();
     //long z = 0;
     //setup audio variables
@@ -60,6 +63,7 @@ class Screen extends JPanel{
                 }
             }
         }
+        print_state_change();
     }
 
 
@@ -112,6 +116,28 @@ class Screen extends JPanel{
                 }
             }
         }).start();
+    }
+    private void paint_string(String s, int x, int y, int size, Color colour){
+        //create new font with new size
+        Font font = new Font("Arial", Font.BOLD, size);
+        g.setFont(font);
+        final FontMetrics fm = getFontMetrics(font);
+        final int w = fm.stringWidth(s);
+        final int h = -(int) fm.getLineMetrics(s, g).getBaselineOffsets()[2];
+        g.setColor(colour);
+        g.drawString(s,x-w/2,y+h/2);
+        //System.out.println("string" +s+" at " +x+","+y);
+    }
+    public void state_change(String s,int slot){
+        this.slot=slot;
+        this.s=s;
+        time_left=120;
+    }
+    private void print_state_change(){
+        Font font = new Font("Arial", Font.BOLD, 36);
+        g.setFont(font);
+        g.setColor(Color.yellow);
+        g.drawString(s,0,height*scale);
     }
 
 }

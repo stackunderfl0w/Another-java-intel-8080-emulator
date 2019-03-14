@@ -20,6 +20,9 @@ public class keylistener implements KeyListener{
             }
             if(KeyEvent.getKeyText(e.getKeyCode()).equals("Q")){Main.max_fps=300;}
             if(KeyEvent.getKeyText(e.getKeyCode()).equals("U")){Main.max_fps=3000;}
+            if(KeyEvent.getKeyText(e.getKeyCode()).equals("P")){Main.i8080.save_state();}
+            if(KeyEvent.getKeyText(e.getKeyCode()).equals("L")){Main.i8080.load_state();}
+
 
         }
         catch(Exception f)

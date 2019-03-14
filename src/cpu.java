@@ -1222,9 +1222,26 @@ public class cpu {
         if(interrupt_enabled){state[memory.length+14]=1;}
         state[memory.length+15]=pc;
         state[memory.length+16]=cycles;
+        Main.screen.state_change("State loaded slot 1",0);
     }
-    public void laod_state(){
+    public void load_state(){
         memory=(Arrays.copyOf(state,memory.length));
+        a=state[memory.length+1];
+        b=state[memory.length+2];
+        c=state[memory.length+3];
+        d=state[memory.length+4];
+        e=state[memory.length+5];
+        h=state[memory.length+6];
+        l=state[memory.length+7];
+        sp=state[memory.length+8];
+        carry=state[memory.length+9]==1;
+        aux_carry=state[memory.length+10]==1;
+        zero=state[memory.length+11]==1;
+        parity=state[memory.length+12]==1;
+        sign=state[memory.length+13]==1;
+        interrupt_enabled=state[memory.length+14]==1;
+        pc=state[memory.length+15];
+        cycles=state[memory.length+16];
     }
     //pause program
     public void sleep(long x){

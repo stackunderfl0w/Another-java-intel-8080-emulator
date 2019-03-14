@@ -12,11 +12,11 @@ import java.io.File;
 import java.util.HashMap;
 public class Main {
     private static long clock_speed=2000000;
-    private static int cycles_per_frame= (int)((clock_speed+60)/120);
+    private static int cycles_per_frame= (int)((clock_speed+60)/60);
     public static ports ports;
     public static HashMap<String, Integer> game_config = new HashMap<>();
 
-    public static String filename="invaders.zip";
+    public static String filename="games/invaders.zip";
 
     //setting up variables
     private static long[] last_frame = new long[60];
@@ -110,10 +110,9 @@ public class Main {
                 last_frame[0]=System.nanoTime();
 
                 //run exact amount of instructions till next interupt
-                while (i8080.cycles<cycles_per_frame){
+                while (i8080.cycles<cycles_per_frame/2){
                     i8080.cycle();
                 }
-                i8080.cycles-=cycles_per_frame;
                 //if the cpu has enabled interrupts they will be run
                 if (i8080.interrupt_enabled){ i8080.run_interrpt(0xcf);}
                 while (i8080.cycles<cycles_per_frame){
@@ -124,11 +123,10 @@ public class Main {
                 //System.out.println(i8080.tc)
                 //updates screen
                 screen.paintScreen();
-                System.out.println(i8080.tc);
+                //System.out.println(i8080.tc);
                 //System.out.println("Number of active threads from the given thread: " + Thread.activeCount());
             }
             i8080.sleep(0);
-
         }
     }
     //load game to memory
@@ -165,7 +163,6 @@ public class Main {
                             System.out.println(game_config);
                         }
                         o++;
-
                     }
                 }
             } catch (Exception f) {
@@ -193,7 +190,6 @@ public class Main {
                         System.out.println(filename);
                     }
                     o++;
-
                 }
             }
             catch (Exception f) {
