@@ -63,7 +63,7 @@ class Screen extends JPanel{
                 }
             }
         }
-        print_state_change();
+        print_messages();
     }
 
 
@@ -93,7 +93,7 @@ class Screen extends JPanel{
     }
     //audio player
     //synchronized as to not freeze screen while playing audio
-    public static synchronized void playAudio(final String url) {
+    public synchronized void playAudio(final String url) {
         new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing, see comments
             public void run() {
                 try {
@@ -128,16 +128,19 @@ class Screen extends JPanel{
         g.drawString(s,x-w/2,y+h/2);
         //System.out.println("string" +s+" at " +x+","+y);
     }
-    public void state_change(String s,int slot){
-        this.slot=slot;
+    public void send_message(String s){
+        System.out.println("hi");
         this.s=s;
         time_left=120;
     }
-    private void print_state_change(){
-        Font font = new Font("Arial", Font.BOLD, 36);
-        g.setFont(font);
-        g.setColor(Color.yellow);
-        g.drawString(s,0,height*scale);
+    private void print_messages(){
+        if(time_left>0){
+            System.out.println("hi");
+            Font font = new Font("Arial", Font.BOLD, 36);
+            g.setFont(font);
+            g.setColor(Color.yellow);
+            g.drawString(s,0,height*scale);
+        }
     }
 
 }

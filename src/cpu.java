@@ -55,6 +55,9 @@ public class cpu {
             memory[5]=0xc9;
         }
     }
+    public cpu(){
+
+    }
     public void cycle(){
         //load next memory as instrctions
         int opcode=memory[pc];
@@ -1222,7 +1225,6 @@ public class cpu {
         if(interrupt_enabled){state[memory.length+14]=1;}
         state[memory.length+15]=pc;
         state[memory.length+16]=cycles;
-        Main.screen.state_change("State loaded slot 1",0);
     }
     public void load_state(){
         memory=(Arrays.copyOf(state,memory.length));
