@@ -23,7 +23,7 @@ public class game_config extends ports{
     private int x;
     public HashMap<String, Integer> game_config = new HashMap<>();
     game_config(String game){
-        game=game.substring(game.lastIndexOf('/'));
+        game=game.substring(game.lastIndexOf('/')+1);
         switch(game.toLowerCase()) {
             case "invaders.zip":
                 game_config.put("invaders.h", 0);
