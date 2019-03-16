@@ -1242,12 +1242,10 @@ public class cpu {
     }
     //pause program
     public void sleep(long x){
-        try
-        {
+        try {
             Thread.sleep(x);
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             // this part is executed when an exception (in this example InterruptedException) occurs
         }
     }

@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import javax.sound.sampled.*;
 import java.io.*;
-
+import java.util.Arrays;
 
 
 class Screen extends JPanel{
@@ -11,9 +11,6 @@ class Screen extends JPanel{
     private int scale = 3; //10 pixels for each emulated-system pixel.
     private int width = 224 * scale;
     private int height = 256 * scale;
-    private int slot;
-    private String s;
-    private int time_left;
     //Random random = new Random();
     //long z = 0;
     //setup audio variables
@@ -24,6 +21,7 @@ class Screen extends JPanel{
     //used to check if screen was set up
     public Screen() {
         System.out.println("Screen initialized");
+        //send_message("hello");
     }
     //set screen size/resolution
     public Dimension getPreferredSize() {
@@ -63,7 +61,6 @@ class Screen extends JPanel{
                 }
             }
         }
-        print_messages();
     }
 
 
@@ -89,6 +86,7 @@ class Screen extends JPanel{
 
         paintFullScreen();
 
+        print_messages();
 
     }
     //audio player
@@ -128,18 +126,24 @@ class Screen extends JPanel{
         g.drawString(s,x-w/2,y+h/2);
         //System.out.println("string" +s+" at " +x+","+y);
     }
-    public void send_message(String s){
-        System.out.println("hi");
-        this.s=s;
-        time_left=120;
-    }
     private void print_messages(){
-        if(time_left>0){
-            System.out.println("hi");
+        if(Main.time_left[0]>0){
+            for (int i=8;i>=0;i--) {
+                if(Main.time_left[i]>0) {
+                    Main.time_left[i]--;
+                }
+                if(Main.time_left[i]==0){
+                    Main.time_left[i]=Main.time_left[i+1];
+                    Main.messages[i]=Main.messages[i+1];
+                }
+            }
+            //System.out.println(Main.messages[0]);
             Font font = new Font("Arial", Font.BOLD, 36);
             g.setFont(font);
             g.setColor(Color.yellow);
-            g.drawString(s,0,height*scale);
+            for(int i=0;i<8;i++) {
+                g.drawString(Main.messages[i], 0, height-50*i);
+            }
         }
     }
 

@@ -15,22 +15,26 @@ public class Main {
     private static int cycles_per_frame= (int)((clock_speed+60)/60);
     public static HashMap<String, Integer> game_config = new HashMap<>();
 
-    public static String filename="games/invaders.zip";
+    private static String filename="games/invaders.zip";
 
     //setting up variables
     private static long[] last_frame = new long[60];
-    public static Screen screen;
+    public static Screen screen = null;
     public static keylistener keyboard =new keylistener();
     public static JFrame f = new JFrame("Java 8080 emulator Patrick Iacob");
     private static double fps;
     public static double max_fps=60;
     public static cpu i8080= new cpu();
+    public static String[] messages= {"","","","","","","","","",""};
+    public static int[] time_left= new int[10];
     public static void main(String[] args) {
         try {
             System.out.println( args[0]);
             filename = args[0];
         }
-        catch(Exception f) { }
+        catch(Exception f) {
+            f.printStackTrace(System.out);
+        }
         i8080.files=filename;
 
         //setting up jframe for graphics
@@ -63,6 +67,7 @@ public class Main {
         start();//this is where the fun begins
     }
     private static void start(){
+        send_message("Game loaded("+filename+")",180);
         int frames=0;
         while(true){
             //makes sure the game runs at the correct speed
@@ -93,10 +98,16 @@ public class Main {
                 if (i8080.interrupt_enabled){ i8080.run_interrpt(0xd7);}
                 //System.out.println(i8080.tc)
                 //updates screen
-                screen.paintScreen();
+                f.repaint();
                 //System.out.println(i8080.tc);
                 //System.out.println("Number of active threads from the given thread: " + Thread.activeCount());
             }
+            //System.out.println((System.nanoTime()-last_frame[0])/1000000);
+            //i8080.sleep(((last_frame[0]+1000000000/(long)max_fps)-System.nanoTime())/10000000);
+            if((last_frame[0]+1000000000/(long)max_fps)-System.nanoTime()>1000000){
+                i8080.sleep(1);
+            }
+            //System.out.println(System.nanoTime()-last_frame[0]);
             i8080.sleep(0);
         }
     }
@@ -187,5 +198,16 @@ public class Main {
         value = value * factor;
         long tmp = Math.round(value);
         return (double) tmp / factor;
+    }
+    public static void send_message(String string,int time){
+        for (int i=9;i>0;i--){
+            time_left[i]=time_left[i-1];
+            messages[i]=messages[i-1];
+        }
+        time_left[0]=time;
+        messages[0]=string;
+
+        System.out.println(Arrays.toString(messages));
+        System.out.println(Arrays.toString(time_left));
     }
 }

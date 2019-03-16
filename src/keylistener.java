@@ -3,7 +3,7 @@ public class keylistener implements KeyListener{
     keylistener(){
 
     }
-    //do wheneer key is pressed
+    //do whenever key is pressed
     public void keyPressed(KeyEvent e) {
         try
         {
@@ -19,8 +19,15 @@ public class keylistener implements KeyListener{
             }
             if(KeyEvent.getKeyText(e.getKeyCode()).equals("Q")){Main.max_fps=300;}
             if(KeyEvent.getKeyText(e.getKeyCode()).equals("U")){Main.max_fps=3000;}
-            if(KeyEvent.getKeyText(e.getKeyCode()).equals("P")){Main.i8080.save_state();Main.screen.send_message("load State");}
-            if(KeyEvent.getKeyText(e.getKeyCode()).equals("L")){Main.i8080.load_state();}
+            if(KeyEvent.getKeyText(e.getKeyCode()).equals("P")){
+                Main.send_message("savestate",120);
+                Main.i8080.save_state();
+            }
+            if(KeyEvent.getKeyText(e.getKeyCode()).equals("L")){
+                Main.send_message("loadstate",120);
+                Main.i8080.load_state();
+            }
+            if(KeyEvent.getKeyText(e.getKeyCode()).equals("M")){Main.f.repaint();}
 
 
         }
