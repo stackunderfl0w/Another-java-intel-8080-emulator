@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.Enumeration;
-import java.nio.file.*;
 import java.io.File;
 import java.util.HashMap;
 public class Main {
@@ -19,7 +18,7 @@ public class Main {
 
     //setting up variables
     private static long[] last_frame = new long[60];
-    public static Screen screen = null;
+    public static Screen screen;
     public static keylistener keyboard =new keylistener();
     public static JFrame f = new JFrame("Java 8080 emulator Patrick Iacob");
     private static double fps;
@@ -207,7 +206,7 @@ public class Main {
         time_left[0]=time;
         messages[0]=string;
 
-        System.out.println(Arrays.toString(messages));
-        System.out.println(Arrays.toString(time_left));
+        //System.out.println(Arrays.toString(messages));
+        //System.out.println(Arrays.toString(time_left));
     }
 }
