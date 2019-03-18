@@ -1,8 +1,6 @@
 //importing needed utilities
 import javax.swing.*;
 import java.io.FileInputStream;
-import java.util.Arrays;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -23,7 +21,7 @@ public class Main {
     public static JFrame f = new JFrame("Java 8080 emulator Patrick Iacob");
     private static double fps;
     public static double max_fps=60;
-    public static cpu i8080= new cpu();
+    public static i8080 i8080= new i8080();
     public static String[] messages= {"","","","","","","","","",""};
     public static int[] time_left= new int[10];
     public static void main(String[] args) {
