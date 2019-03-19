@@ -2,23 +2,23 @@ import java.util.HashMap;
 
 public class game_config extends ports{
     //variables for if buttons are pressed and internal registers
-    private static int player_one_fire;
-    private static int player_one_left;
-    private static int player_one_right;
-    private static int one_player_button;
-    private static int coin;
-    private static int player_two_fire;
-    private static int player_two_left;
-    private static int player_two_right;
-    private static int two_player_button;
-    private static final int extra_ship_location=0;//0=1500 1=1000 points
-    private static final int display_coin_in_demo=0;//0=ON
-    private static final int extra_ships=0;//extra starting ships 0-3(3-6 total)
-    private static int port_2;
-    private static int port_4lo;
-    private static int port_4hi;
-    private static String[] sounds=new String[]{"sound/ufo_highpitch.wav","sound/shoot.wav","sound/explosion.wav","sound/invaderkilled.wav","","sound/fastinvader1.wav","sound/fastinvader2.wav","sound/fastinvader3.wav","sound/fastinvader4.wav","sound/ufo_lowpitch.wav"};
-    private static boolean[] sounds_playing=new boolean[10];
+    private int player_one_fire;
+    private int player_one_left;
+    private int player_one_right;
+    private int one_player_button;
+    private int coin;
+    private int player_two_fire;
+    private int player_two_left;
+    private int player_two_right;
+    private int two_player_button;
+    private final int extra_ship_location=0;//0=1500 1=1000 points
+    private final int display_coin_in_demo=0;//0=ON
+    private final int extra_ships=0;//extra starting ships 0-3(3-6 total)
+    private int port_2;
+    private int port_4lo;
+    private int port_4hi;
+    private String[] sounds=new String[]{"sound/ufo_highpitch.wav","sound/shoot.wav","sound/explosion.wav","sound/invaderkilled.wav","","sound/fastinvader1.wav","sound/fastinvader2.wav","sound/fastinvader3.wav","sound/fastinvader4.wav","sound/ufo_lowpitch.wav"};
+    private boolean[] sounds_playing=new boolean[10];
     private int x;
     public HashMap<String, Integer> game_config = new HashMap<>();
     game_config(String game){
@@ -55,17 +55,17 @@ public class game_config extends ports{
         //constructor
         //makes sure keys needed are present in hashmap
         System.out.println("Input/output ports Initialized");
-        Main.i8080.key.put("Space",0);
-        Main.i8080.key.put("A",0);
-        Main.i8080.key.put("D",0);
-        Main.i8080.key.put("O",0);
-        Main.i8080.key.put("C",0);
-        Main.i8080.key.put("␣",0);
+        Main.cpu.key.put("Space",0);
+        Main.cpu.key.put("A",0);
+        Main.cpu.key.put("D",0);
+        Main.cpu.key.put("O",0);
+        Main.cpu.key.put("C",0);
+        Main.cpu.key.put("␣",0);
 
-        Main.i8080.key.put("Left",0);
-        Main.i8080.key.put("Right",0);
-        Main.i8080.key.put("Insert",0);
-        Main.i8080.key.put("P",0);
+        Main.cpu.key.put("Left",0);
+        Main.cpu.key.put("Right",0);
+        Main.cpu.key.put("Insert",0);
+        Main.cpu.key.put("P",0);
 
 
     }
@@ -120,20 +120,20 @@ public class game_config extends ports{
                 else{sounds_playing[9]=false;}
         }
     }
-    public static void get_key(){
+    public void get_key(){
         //check what keys are pressed
         //just in case keys are not in hashmap
         try
         {
-            player_one_fire = Main.i8080.key.get("Space")|Main.i8080.key.get("␣");
-            player_one_left = Main.i8080.key.get("A");
-            player_one_right = Main.i8080.key.get("D");
-            one_player_button = Main.i8080.key.get("O");
-            coin = Main.i8080.key.get("C");
-            player_two_fire = Main.i8080.key.get("Insert");
-            player_two_left = Main.i8080.key.get("Left");
-            player_two_right = Main.i8080.key.get("Right");
-            two_player_button = Main.i8080.key.get("P");
+            player_one_fire = Main.cpu.key.get("Space")|Main.cpu.key.get("␣");
+            player_one_left = Main.cpu.key.get("A");
+            player_one_right = Main.cpu.key.get("D");
+            one_player_button = Main.cpu.key.get("O");
+            coin = Main.cpu.key.get("C");
+            player_two_fire = Main.cpu.key.get("Insert");
+            player_two_left = Main.cpu.key.get("Left");
+            player_two_right = Main.cpu.key.get("Right");
+            two_player_button = Main.cpu.key.get("P");
         }
         catch(Exception f)
         {

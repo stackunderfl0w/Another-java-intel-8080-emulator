@@ -1,7 +1,7 @@
 //http://www.classiccmp.org/dunfield/altair/d/88opman.pdf useful link
 import java.util.Arrays;
 import java.util.HashMap;
-public class i8080{
+public class i8080 implements processor{
     //set up cpu registers memory and flags as variables
     public int[] memory = new int[0x8000];
     private boolean debug_mode=false;
@@ -51,7 +51,7 @@ public class i8080{
         }
     }
     public i8080(){
-
+        super();
     }
     public void cycle(){
         //load next memory as instrctions

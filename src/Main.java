@@ -21,10 +21,11 @@ public class Main {
     public static JFrame f = new JFrame("Java 8080 emulator Patrick Iacob");
     private static double fps;
     public static double max_fps=60;
-    public static i8080 i8080= new i8080();
+    public static i8080 cpu= new i8080();
     public static String[] messages= {"","","","","","","","","",""};
     public static int[] time_left= new int[10];
     public static void main(String[] args) {
+
         try {
             System.out.println( args[0]);
             filename = args[0];
@@ -32,7 +33,7 @@ public class Main {
         catch(Exception f) {
             f.printStackTrace(System.out);
         }
-        i8080.files=filename;
+        cpu.files=filename;
 
         //setting up jframe for graphics
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,19 +46,19 @@ public class Main {
         f.setVisible(true);
         f.setFocusable(true);
         f.requestFocusInWindow();
-        i8080.setup();
+        cpu.setup();
         System.out.println("Config loaded: " + filename);
         System.out.println(game_config);
         load_rom(filename);
-        i8080.setup();
+        cpu.setup();
 
-        System.out.println("0x"+i8080.hex(i8080.memory.length)+" Bytes ready");
-        System.out.println("0x"+i8080.hex(i8080.cycle_table.length)+ " opcodes loaded");
-        //System.out.println(Arrays.toString(i8080.memory));
+        System.out.println("0x"+cpu.hex(cpu.memory.length)+" Bytes ready");
+        System.out.println("0x"+cpu.hex(cpu.cycle_table.length)+ " opcodes loaded");
+        //System.out.println(Arrays.toString(cpu.memory));
         System.out.println("Cpu speed "+clock_speed+"hz");
         System.out.println("Cycles per frame " + cycles_per_frame+"hz");
         System.out.println("\nBoot Success!");
-        if(i8080.cpm_mode){
+        if(cpu.cpm_mode){
             System.out.println("System booted in cp/m mode\n");
         }
 
@@ -83,36 +84,36 @@ public class Main {
                 last_frame[0]=System.nanoTime();
 
                 //run exact amount of instructions till next interupt
-                while (i8080.cycles<cycles_per_frame/2){
-                    i8080.cycle();
+                while (cpu.cycles<cycles_per_frame/2){
+                    cpu.cycle();
                 }
                 //if the cpu has enabled interrupts they will be run
-                if (i8080.interrupt_enabled){ i8080.run_interrpt(0xcf);}
-                while (i8080.cycles<cycles_per_frame){
-                    i8080.cycle();
+                if (cpu.interrupt_enabled){ cpu.run_interrpt(0xcf);}
+                while (cpu.cycles<cycles_per_frame){
+                    cpu.cycle();
                 }
-                i8080.cycles-=cycles_per_frame;
-                if (i8080.interrupt_enabled){ i8080.run_interrpt(0xd7);}
-                //System.out.println(i8080.tc)
+                cpu.cycles-=cycles_per_frame;
+                if (cpu.interrupt_enabled){ cpu.run_interrpt(0xd7);}
+                //System.out.println(cpu.tc)
                 //updates screen
                 f.repaint();
-                //System.out.println(i8080.tc);
+                //System.out.println(cpu.tc);
                 //System.out.println("Number of active threads from the given thread: " + Thread.activeCount());
             }
             //System.out.println((System.nanoTime()-last_frame[0])/1000000);
-            //i8080.sleep(((last_frame[0]+1000000000/(long)max_fps)-System.nanoTime())/10000000);
+            //cpu.sleep(((last_frame[0]+1000000000/(long)max_fps)-System.nanoTime())/10000000);
             if((last_frame[0]+1000000000/(long)max_fps)-System.nanoTime()>1000000){
-                i8080.sleep(1);
+                cpu.sleep(1);
             }
             //System.out.println(System.nanoTime()-last_frame[0]);
-            i8080.sleep(0);
+            cpu.sleep(0);
         }
     }
     //load game to memory
     private static void load_game(String game){
         int d=0;
         for (int o = 0; o < (game.length()+1)/3; o++){
-            i8080.memory[o] = Integer.parseInt(game.substring(o*3,o*3+2),16);d++;
+            cpu.memory[o] = Integer.parseInt(game.substring(o*3,o*3+2),16);d++;
         }
         System.out.println(d);
     }
@@ -131,10 +132,10 @@ public class Main {
                     int o = 0;
                     while ((i = stream.read()) != -1) {
                         // prints character
-                        //System.out.print(i8080.hex(i)+" ");
+                        //System.out.print(cpu.hex(i)+" ");
                         try {
                             if (i != 0) {
-                                i8080.memory[o + game_config.get(entry.toString())] = i;
+                                cpu.memory[o + game_config.get(entry.toString())] = i;
                             }
                         } catch (Exception f) {
                             f.printStackTrace(System.out);
@@ -159,10 +160,10 @@ public class Main {
                 while ((i = stream.read()) != -1) {
 
                     // prints character
-                    //System.out.print(i8080.hex(i)+" ");
+                    //System.out.print(cpu.hex(i)+" ");
                     try {
                         if (i != 0) {
-                            i8080.memory[o+0x100] = i;
+                            cpu.memory[o+0x100] = i;
                         }
                     } catch (Exception f) {
                         f.printStackTrace(System.out);
@@ -175,7 +176,7 @@ public class Main {
                 f.printStackTrace(System.out);
                 System.exit(5);
             }
-            i8080.cpm_mode=true;
+            cpu.cpm_mode=true;
         }
         System.out.println("\nRom loaded");
     }
@@ -183,7 +184,7 @@ public class Main {
     private static void load_game(String game, int adr){
         int d=0;
         for (int o = 0; o < (game.length()+1)/3; o++){
-            i8080.memory[o+adr] = Integer.parseInt(game.substring(o*3,o*3+2),16);d++;
+            cpu.memory[o+adr] = Integer.parseInt(game.substring(o*3,o*3+2),16);d++;
         }
         System.out.println(d);
     }

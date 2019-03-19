@@ -1,5 +1,0 @@
-abstract class cpu {
-    cpu(){
-        
-    }
-}
