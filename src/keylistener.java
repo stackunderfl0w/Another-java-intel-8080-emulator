@@ -8,13 +8,12 @@ public class keylistener implements KeyListener{
         try
         {
             //adds key that is pressed to hashmap of pressed keys
-            Main.cpu.key.put(KeyEvent.getKeyText(e.getKeyCode()), 1);
+            Main.cpu.key_pressed(KeyEvent.getKeyText(e.getKeyCode()));
             //System.out.println(Main.cpu.key);
             //press f to pay respects
             if(KeyEvent.getKeyText(e.getKeyCode()).equals("F")){System.exit(0); }
             if(KeyEvent.getKeyText(e.getKeyCode()).equals("7")){
-                Main.cpu.breakpoint_enabled=true;
-                Main.cpu.breakpoint= (int)Main.cpu.tc+500;
+                Main.cpu.set_breakpoint(500);
                 //System.exit(0);
             }
             if(KeyEvent.getKeyText(e.getKeyCode()).equals("Q")){Main.max_fps=300;}
@@ -41,7 +40,7 @@ public class keylistener implements KeyListener{
     public void keyReleased(KeyEvent e) {
         try
         {
-            Main.cpu.key.put(KeyEvent.getKeyText(e.getKeyCode()), 0);
+            Main.cpu.key_released(KeyEvent.getKeyText(e.getKeyCode()));
             if(KeyEvent.getKeyText(e.getKeyCode()).equals("Q")){Main.max_fps=60;}
             if(KeyEvent.getKeyText(e.getKeyCode()).equals("U")){Main.max_fps=60;}
 

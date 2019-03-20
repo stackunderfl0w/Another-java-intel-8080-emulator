@@ -1,7 +1,7 @@
 //http://www.classiccmp.org/dunfield/altair/d/88opman.pdf useful link
 import java.util.Arrays;
 import java.util.HashMap;
-public class i8080 implements processor{
+public class i8080 extends processor{
     //set up cpu registers memory and flags as variables
     public int[] memory = new int[0x8000];
     private boolean debug_mode=false;
@@ -23,7 +23,7 @@ public class i8080 implements processor{
     private boolean sign;
     private int[] state;
     //public int breakpoint = 9565000;
-    public int breakpoint = 1990000;
+    public long breakpoint = 1990000;
 
     public boolean breakpoint_enabled=false;
     public boolean interrupt_enabled=false;
@@ -34,7 +34,6 @@ public class i8080 implements processor{
     private int hl;
     private int z;
     public int cycles=0;
-    public String files;
     //variable for which keys are pressed
     public HashMap<String, Integer> key = new HashMap<>();
     //initialize game specif serial ports setup
@@ -43,8 +42,11 @@ public class i8080 implements processor{
     //table for how many cycles each instruction takes
     public int[]cycle_table = new int []{4,10,7,6,5,5,7,4,0,11,7,6,5,5,7,4      ,4,10,7,6,5,5,7,4,4,11,7,6,5,5,7,4      ,4,10,16,6,5,5,7,4,4,11,16,6,5,5,7,4        ,4,10,13,6,10,10,10,4,4,11,13,6,5,5,7,4     ,5,5,5,5,5,5,7,5,5,5,5,5,5,5,7,5        ,5,5,5,5,5,5,7,5,5,5,5,5,5,5,7,5    ,5,5,5,5,5,5,7,5,5,5,5,5,5,5,7,5    ,7,7,7,7,7,7,7,7,5,5,5,5,5,5,7,5    ,4,4,4,4,4,4,7,4,4,4,4,4,4,4,7,4    ,4,4,4,4,4,4,7,4,4,4,4,4,4,4,7,4    ,4,4,4,4,4,4,7,4,4,4,4,4,4,4,7,4    ,4,4,4,4,4,4,7,4,4,4,4,4,4,4,7,4    ,11,10,15,10,18,11,7,11,11,10,15,00,18,17,7,11      ,11,10,15,10,18,11,7,11,11,4,15,10,18,4,7,11    ,11,10,15,4,18,11,7,11,11,4,10,4,18,11,7,11     ,11,10,15,4,18,11,7,11,11,6,15,4,18,4,7,11};
     //run 1 emulated cycle
-    public void setup(){
+    public void setup(String files){
         ports= new game_config(files);
+        if(files.toLowerCase().contains(".com")){
+            cpm_mode=true;
+        }
         if (cpm_mode){
             pc=0x100;
             memory[5]=0xc9;
@@ -123,9 +125,11 @@ public class i8080 implements processor{
         }
 
     }
-    public void run_interrpt(int opcode) {
-        run_op(opcode,0,0);
-        pc++;
+    public void run_interrupt(int opcode) {
+        if (interrupt_enabled){
+            run_op(opcode,0,0);
+            pc++;
+        }
     }
 
         //run cpu instruction
@@ -1396,5 +1400,21 @@ public class i8080 implements processor{
             memory[adr] = value;
         }
 
+    }
+    public void set_breakpoint(long brk){
+        breakpoint_enabled=true;
+        breakpoint =tc+brk;
+    }
+    public int read_memory(int adr){
+        return memory[adr];
+    }
+    public void key_pressed(String k){
+        key.put(k,1);
+    }
+    public void key_released(String k){
+        key.put(k,0);
+    }
+    public int get_key(String k){
+        return key.get(k);
     }
 }

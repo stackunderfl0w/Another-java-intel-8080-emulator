@@ -55,17 +55,6 @@ public class game_config extends ports{
         //constructor
         //makes sure keys needed are present in hashmap
         System.out.println("Input/output ports Initialized");
-        Main.cpu.key.put("Space",0);
-        Main.cpu.key.put("A",0);
-        Main.cpu.key.put("D",0);
-        Main.cpu.key.put("O",0);
-        Main.cpu.key.put("C",0);
-        Main.cpu.key.put("␣",0);
-
-        Main.cpu.key.put("Left",0);
-        Main.cpu.key.put("Right",0);
-        Main.cpu.key.put("Insert",0);
-        Main.cpu.key.put("P",0);
 
 
     }
@@ -125,15 +114,15 @@ public class game_config extends ports{
         //just in case keys are not in hashmap
         try
         {
-            player_one_fire = Main.cpu.key.get("Space")|Main.cpu.key.get("␣");
-            player_one_left = Main.cpu.key.get("A");
-            player_one_right = Main.cpu.key.get("D");
-            one_player_button = Main.cpu.key.get("O");
-            coin = Main.cpu.key.get("C");
-            player_two_fire = Main.cpu.key.get("Insert");
-            player_two_left = Main.cpu.key.get("Left");
-            player_two_right = Main.cpu.key.get("Right");
-            two_player_button = Main.cpu.key.get("P");
+            player_one_fire = Main.cpu.get_key("Space")|Main.cpu.get_key("␣");
+            player_one_left = Main.cpu.get_key("A");
+            player_one_right = Main.cpu.get_key("D");
+            one_player_button = Main.cpu.get_key("O");
+            coin = Main.cpu.get_key("C");
+            player_two_fire = Main.cpu.get_key("Insert");
+            player_two_left = Main.cpu.get_key("Left");
+            player_two_right = Main.cpu.get_key("Right");
+            two_player_button = Main.cpu.get_key("P");
         }
         catch(Exception f)
         {

@@ -21,7 +21,7 @@ public class Main {
     public static JFrame f = new JFrame("Java 8080 emulator Patrick Iacob");
     private static double fps;
     public static double max_fps=60;
-    public static i8080 cpu= new i8080();
+    public static processor cpu= new i8080();
     public static String[] messages= {"","","","","","","","","",""};
     public static int[] time_left= new int[10];
     public static void main(String[] args) {
@@ -33,8 +33,6 @@ public class Main {
         catch(Exception f) {
             f.printStackTrace(System.out);
         }
-        cpu.files=filename;
-
         //setting up jframe for graphics
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         screen = new Screen();
@@ -46,19 +44,19 @@ public class Main {
         f.setVisible(true);
         f.setFocusable(true);
         f.requestFocusInWindow();
-        cpu.setup();
+        cpu.setup(filename);
         System.out.println("Config loaded: " + filename);
         System.out.println(game_config);
         load_rom(filename);
-        cpu.setup();
+        cpu.setup(filename);
 
-        System.out.println("0x"+cpu.hex(cpu.memory.length)+" Bytes ready");
-        System.out.println("0x"+cpu.hex(cpu.cycle_table.length)+ " opcodes loaded");
+        System.out.println("0x"+hex(cpu.memory.length)+" Bytes ready");
+        System.out.println("0x"+hex(cpu.cycle_table.length)+ " opcodes loaded");
         //System.out.println(Arrays.toString(cpu.memory));
         System.out.println("Cpu speed "+clock_speed+"hz");
         System.out.println("Cycles per frame " + cycles_per_frame+"hz");
         System.out.println("\nBoot Success!");
-        if(cpu.cpm_mode){
+        if(filename.toLowerCase().contains(".com")){
             System.out.println("System booted in cp/m mode\n");
         }
 
@@ -88,12 +86,12 @@ public class Main {
                     cpu.cycle();
                 }
                 //if the cpu has enabled interrupts they will be run
-                if (cpu.interrupt_enabled){ cpu.run_interrpt(0xcf);}
+                cpu.run_interrupt(0xcf);
                 while (cpu.cycles<cycles_per_frame){
                     cpu.cycle();
                 }
                 cpu.cycles-=cycles_per_frame;
-                if (cpu.interrupt_enabled){ cpu.run_interrpt(0xd7);}
+                cpu.run_interrupt(0xd7);
                 //System.out.println(cpu.tc)
                 //updates screen
                 f.repaint();
@@ -101,12 +99,12 @@ public class Main {
                 //System.out.println("Number of active threads from the given thread: " + Thread.activeCount());
             }
             //System.out.println((System.nanoTime()-last_frame[0])/1000000);
-            //cpu.sleep(((last_frame[0]+1000000000/(long)max_fps)-System.nanoTime())/10000000);
+            //sleep(((last_frame[0]+1000000000/(long)max_fps)-System.nanoTime())/10000000);
             if((last_frame[0]+1000000000/(long)max_fps)-System.nanoTime()>1000000){
-                cpu.sleep(1);
+                sleep(1);
             }
             //System.out.println(System.nanoTime()-last_frame[0]);
-            cpu.sleep(0);
+            sleep(0);
         }
     }
     //load game to memory
@@ -132,7 +130,7 @@ public class Main {
                     int o = 0;
                     while ((i = stream.read()) != -1) {
                         // prints character
-                        //System.out.print(cpu.hex(i)+" ");
+                        //System.out.print(hex(i)+" ");
                         try {
                             if (i != 0) {
                                 cpu.memory[o + game_config.get(entry.toString())] = i;
@@ -160,7 +158,7 @@ public class Main {
                 while ((i = stream.read()) != -1) {
 
                     // prints character
-                    //System.out.print(cpu.hex(i)+" ");
+                    //System.out.print(hex(i)+" ");
                     try {
                         if (i != 0) {
                             cpu.memory[o+0x100] = i;
@@ -176,7 +174,6 @@ public class Main {
                 f.printStackTrace(System.out);
                 System.exit(5);
             }
-            cpu.cpm_mode=true;
         }
         System.out.println("\nRom loaded");
     }
@@ -207,5 +204,18 @@ public class Main {
 
         //System.out.println(Arrays.toString(messages));
         //System.out.println(Arrays.toString(time_left));
+    }
+    public static String hex(int x){
+        String r=(String.format("%x",x));
+        if (r.length()==1){r="0"+r;}
+        return r;
+    }
+    public static void sleep(long x){
+        try {
+            Thread.sleep(x);
+        }
+        catch(Exception e) {
+            // this part is executed when an exception (in this example InterruptedException) occurs
+        }
     }
 }

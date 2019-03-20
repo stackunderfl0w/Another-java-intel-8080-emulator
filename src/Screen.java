@@ -56,7 +56,7 @@ class Screen extends JPanel{
         for (int y = 0; y < 224; y++) {
             for (int x = 0; x < 32; x++) {
                 for (int z = 0; z<8;z++){
-                    boolean value = (Main.cpu.memory[(0x2400+32*y+x)]>>z)%2==1;
+                    boolean value = (Main.cpu.read_memory(0x2400+32*y+x)>>z)%2==1;
                     paintPixel(value,y , 256-(x*8+z));
                 }
             }
