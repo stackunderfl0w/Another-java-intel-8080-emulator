@@ -55,7 +55,17 @@ public class game_config extends ports{
         //constructor
         //makes sure keys needed are present in hashmap
         System.out.println("Input/output ports Initialized");
+        Main.cpu.key.put("Space",0);
+        Main.cpu.key.put("A",0);
+        Main.cpu.key.put("D",0);
+        Main.cpu.key.put("O",0);
+        Main.cpu.key.put("C",0);
+        Main.cpu.key.put("␣",0);
 
+        Main.cpu.key.put("Left",0);
+        Main.cpu.key.put("Right",0);
+        Main.cpu.key.put("Insert",0);
+        Main.cpu.key.put("P",0);
 
     }
     public int in(int port){
@@ -126,7 +136,7 @@ public class game_config extends ports{
         }
         catch(Exception f)
         {
-            //error handling code
+            f.printStackTrace(System.out);
         }
     }
 }

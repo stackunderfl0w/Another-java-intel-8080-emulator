@@ -3,7 +3,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 public class i8080 extends processor{
     //set up cpu registers memory and flags as variables
-    public int[] memory = new int[0x8000];
+    protected int[] memory = new int[0x8000];
     private boolean debug_mode=false;
     public boolean cpm_mode=false;
 
@@ -54,6 +54,9 @@ public class i8080 extends processor{
     }
     public i8080(){
         super();
+        super.memory=memory;
+        super.cycles=cycles;
+        super.key=key;
     }
     public void cycle(){
         //load next memory as instrctions
@@ -1207,6 +1210,8 @@ public class i8080 extends processor{
         }
     }
     public void save_state(){
+        System.out.println(key);
+
         state=Arrays.copyOf(memory,memory.length+16);
         state[memory.length+1]=a;
         state[memory.length+2]=b;
@@ -1224,6 +1229,7 @@ public class i8080 extends processor{
         if(interrupt_enabled){state[memory.length+14]=1;}
         state[memory.length+15]=pc;
         state[memory.length+16]=cycles;
+        System.out.println(key);
     }
     public void load_state(){
         memory=(Arrays.copyOf(state,memory.length));
@@ -1399,7 +1405,9 @@ public class i8080 extends processor{
         if((h<<8)+l>=0x2000|cpm_mode) {
             memory[adr] = value;
         }
-
+    }
+    public void write_rom(int adr, int value){
+        memory[adr] = value;
     }
     public void set_breakpoint(long brk){
         breakpoint_enabled=true;
@@ -1416,5 +1424,11 @@ public class i8080 extends processor{
     }
     public int get_key(String k){
         return key.get(k);
+    }
+    public int get_cycles(){
+        return cycles;
+    }
+    public void set_cycles(int c){
+        cycles=c;
     }
 }

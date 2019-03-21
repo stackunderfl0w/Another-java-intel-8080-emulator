@@ -51,7 +51,7 @@ public class Main {
         cpu.setup(filename);
 
         System.out.println("0x"+hex(cpu.memory.length)+" Bytes ready");
-        System.out.println("0x"+hex(cpu.cycle_table.length)+ " opcodes loaded");
+        //System.out.println("0x"+hex(cpu.cycle_table.length)+ " opcodes loaded");
         //System.out.println(Arrays.toString(cpu.memory));
         System.out.println("Cpu speed "+clock_speed+"hz");
         System.out.println("Cycles per frame " + cycles_per_frame+"hz");
@@ -82,15 +82,15 @@ public class Main {
                 last_frame[0]=System.nanoTime();
 
                 //run exact amount of instructions till next interupt
-                while (cpu.cycles<cycles_per_frame/2){
+                while (cpu.get_cycles()<cycles_per_frame/2){
                     cpu.cycle();
                 }
                 //if the cpu has enabled interrupts they will be run
                 cpu.run_interrupt(0xcf);
-                while (cpu.cycles<cycles_per_frame){
+                while (cpu.get_cycles()<cycles_per_frame){
                     cpu.cycle();
                 }
-                cpu.cycles-=cycles_per_frame;
+                cpu.set_cycles(cpu.get_cycles()-cycles_per_frame);
                 cpu.run_interrupt(0xd7);
                 //System.out.println(cpu.tc)
                 //updates screen
