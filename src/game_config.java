@@ -21,8 +21,11 @@ public class game_config extends ports{
     private boolean[] sounds_playing=new boolean[10];
     private int x;
     public HashMap<String, Integer> game_config = new HashMap<>();
+    public HashMap<String, Integer> key = new HashMap<>();
+
     game_config(String game){
         game=game.substring(game.lastIndexOf('/')+1);
+        super.key=key;
         switch(game.toLowerCase()) {
             case "invaders.zip":
                 game_config.put("invaders.h", 0);
@@ -55,23 +58,24 @@ public class game_config extends ports{
         //constructor
         //makes sure keys needed are present in hashmap
         System.out.println("Input/output ports Initialized");
-        Main.cpu.key.put("Space",0);
-        Main.cpu.key.put("A",0);
-        Main.cpu.key.put("D",0);
-        Main.cpu.key.put("O",0);
-        Main.cpu.key.put("C",0);
-        Main.cpu.key.put("␣",0);
+        key.put("Space",0);
+        key.put("A",0);
+        key.put("D",0);
+        key.put("O",0);
+        key.put("C",0);
+        key.put("␣",0);
 
-        Main.cpu.key.put("Left",0);
-        Main.cpu.key.put("Right",0);
-        Main.cpu.key.put("Insert",0);
-        Main.cpu.key.put("P",0);
+        key.put("Left",0);
+        key.put("Right",0);
+        key.put("Insert",0);
+        key.put("P",0);
 
     }
     public int in(int port){
         switch(port){
             case 1:
                 get_key();
+                System.out.println(coin+(two_player_button<<1)+(one_player_button<<2)+(1<<3)+(player_one_fire<<4) +(player_one_left<<5)+(player_one_right<<6));
                 return coin+(two_player_button<<1)+(one_player_button<<2)+(1<<3)+(player_one_fire<<4) +(player_one_left<<5)+(player_one_right<<6);
             case 2:
                 return extra_ships+(extra_ship_location<<3)+(player_two_fire<<4)+(player_two_left<<5)+(player_two_right<<6)+(display_coin_in_demo<<7);
@@ -124,15 +128,18 @@ public class game_config extends ports{
         //just in case keys are not in hashmap
         try
         {
-            player_one_fire = Main.cpu.get_key("Space")|Main.cpu.get_key("␣");
-            player_one_left = Main.cpu.get_key("A");
-            player_one_right = Main.cpu.get_key("D");
-            one_player_button = Main.cpu.get_key("O");
-            coin = Main.cpu.get_key("C");
-            player_two_fire = Main.cpu.get_key("Insert");
-            player_two_left = Main.cpu.get_key("Left");
-            player_two_right = Main.cpu.get_key("Right");
-            two_player_button = Main.cpu.get_key("P");
+            key=super.key;
+            System.out.println(key);
+            player_one_fire = key.get("Space")|key.get("␣");
+            player_one_left = key.get("A");
+            player_one_right = key.get("D");
+            one_player_button = key.get("O");
+            coin = key.get("C");
+            player_two_fire = key.get("Insert");
+            player_two_left = key.get("Left");
+            player_two_right = key.get("Right");
+            two_player_button = key.get("P");
+            System.out.println(key);
         }
         catch(Exception f)
         {

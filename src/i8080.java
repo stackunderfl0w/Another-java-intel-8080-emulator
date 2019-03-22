@@ -35,7 +35,6 @@ public class i8080 extends processor{
     private int z;
     public int cycles=0;
     //variable for which keys are pressed
-    public HashMap<String, Integer> key = new HashMap<>();
     //initialize game specif serial ports setup
     public ports ports;
     //private int[]cycle_table = new int []{4,  10, 7,  5,  5,  5,  7,  4,  4 , 10, 7,  5,  5,  5,  7,  4, 4,  10, 7,  5,  5,  5,  7,  4,  4,  10, 7,  5,  5,  5,  7,  4, 4,  10, 16, 5,  5,  5,  7,  4,  4,  10, 16, 5,  5,  5,  7,  4, 4,  10, 13, 5,  10, 10, 10, 4,  4,  10, 13, 5,  5,  5,  7,  4, 5,  5,  5,  5,  5,  5,  7,  5,  5,  5,  5,  5,  5,  5,  7,  5, 5,  5,  5,  5,  5,  5,  7,  5,  5,  5,  5,  5,  5,  5,  7,  5, 5,  5,  5,  5,  5,  5,  7,  5,  5,  5,  5,  5,  5,  5,  7,  5, 7,  7,  7,  7,  7,  7,  7,  7,  5,  5,  5,  5,  5,  5,  7,  5, 4,  4,  4,  4,  4,  4,  7,  4,  4,  4,  4,  4,  4,  4,  7,  4, 4,  4,  4,  4,  4,  4,  7,  4,  4,  4,  4,  4,  4,  4,  7,  4, 4,  4,  4,  4,  4,  4,  7,  4,  4,  4,  4,  4,  4,  4,  7,  4, 4,  4,  4,  4,  4,  4,  7,  4,  4,  4,  4,  4,  4,  4,  7,  4, 11, 10, 10, 10, 17, 11, 7,  11, 11, 10, 10, 10, 10, 17, 7,  11, 11, 10, 10, 10, 17, 11, 7,  11, 11, 10, 10, 10, 10, 17, 7,  11, 11, 10, 10, 18, 17, 11, 7,  11, 11, 5,  10, 5,  17, 17, 7,  11, 11, 10, 10, 4,  17, 11, 7,  11, 11, 5,  10, 4,  17, 17, 7,  11};
@@ -54,9 +53,9 @@ public class i8080 extends processor{
     }
     public i8080(){
         super();
+        ports= new game_config("invaders.zip");
         super.memory=memory;
-        super.cycles=cycles;
-        super.key=key;
+        //super.ports=ports;
     }
     public void cycle(){
         //load next memory as instrctions
@@ -135,7 +134,7 @@ public class i8080 extends processor{
         }
     }
 
-        //run cpu instruction
+    //run cpu instruction
     public void run_op(int opcode,int d8,int op3){
         int d16=(op3<<8)+d8;
         //switch statement for each of the 256 instructions
@@ -1210,7 +1209,6 @@ public class i8080 extends processor{
         }
     }
     public void save_state(){
-        System.out.println(key);
 
         state=Arrays.copyOf(memory,memory.length+16);
         state[memory.length+1]=a;
@@ -1229,7 +1227,6 @@ public class i8080 extends processor{
         if(interrupt_enabled){state[memory.length+14]=1;}
         state[memory.length+15]=pc;
         state[memory.length+16]=cycles;
-        System.out.println(key);
     }
     public void load_state(){
         memory=(Arrays.copyOf(state,memory.length));
@@ -1415,15 +1412,6 @@ public class i8080 extends processor{
     }
     public int read_memory(int adr){
         return memory[adr];
-    }
-    public void key_pressed(String k){
-        key.put(k,1);
-    }
-    public void key_released(String k){
-        key.put(k,0);
-    }
-    public int get_key(String k){
-        return key.get(k);
     }
     public int get_cycles(){
         return cycles;

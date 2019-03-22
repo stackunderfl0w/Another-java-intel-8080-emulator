@@ -8,7 +8,7 @@ public class keylistener implements KeyListener{
         try
         {
             //adds key that is pressed to hashmap of pressed keys
-            Main.cpu.key.put(KeyEvent.getKeyText(e.getKeyCode()),1);
+            Main.ports.key.put(KeyEvent.getKeyText(e.getKeyCode()),1);
             //System.out.println(Main.cpu.key);
             //press f to pay respects
             if(KeyEvent.getKeyText(e.getKeyCode()).equals("F")){System.exit(0); }
@@ -32,7 +32,7 @@ public class keylistener implements KeyListener{
         }
         catch(Exception f)
         {
-            //error handling code
+            f.printStackTrace(System.out);
         }
 
     }
@@ -40,14 +40,14 @@ public class keylistener implements KeyListener{
     public void keyReleased(KeyEvent e) {
         try
         {
-            Main.cpu.key.put(KeyEvent.getKeyText(e.getKeyCode()),1);
+            Main.ports.key.put(KeyEvent.getKeyText(e.getKeyCode()),0);
             if(KeyEvent.getKeyText(e.getKeyCode()).equals("Q")){Main.max_fps=60;}
             if(KeyEvent.getKeyText(e.getKeyCode()).equals("U")){Main.max_fps=60;}
 
         }
         catch(Exception f)
         {
-            //error handling code
+            f.printStackTrace(System.out);
         }
 
     }

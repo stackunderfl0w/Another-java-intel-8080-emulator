@@ -158,7 +158,6 @@ public class z80 extends processor{
     public z80(){
         super();
         super.memory=memory;
-        super.cycles=cycles;
     }
     public void cycle(){
         //load next memory as instrctions

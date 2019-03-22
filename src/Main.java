@@ -24,6 +24,7 @@ public class Main {
     public static processor cpu= new i8080();
     public static String[] messages= {"","","","","","","","","",""};
     public static int[] time_left= new int[10];
+    public static ports ports;
     public static void main(String[] args) {
 
         try {
@@ -33,6 +34,7 @@ public class Main {
         catch(Exception f) {
             f.printStackTrace(System.out);
         }
+        ports=new game_config(filename);
         //setting up jframe for graphics
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         screen = new Screen();
