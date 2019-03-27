@@ -11,6 +11,8 @@ public class Main {
     private static long clock_speed=2000000;
     private static int cycles_per_frame= (int)((clock_speed+60)/60);
     public static HashMap<String, Integer> game_config = new HashMap<>();
+    public static HashMap<Integer, Integer> key;
+
 
     private static String filename="games/invaders.zip";
 
@@ -21,12 +23,13 @@ public class Main {
     public static JFrame f = new JFrame("Java 8080 emulator Patrick Iacob");
     private static double fps;
     public static double max_fps=60;
-    public static processor cpu= new i8080();
+    public static processor cpu;
     public static String[] messages= {"","","","","","","","","",""};
     public static int[] time_left= new int[10];
     public static ports ports;
     public static void main(String[] args) {
-
+        key = new HashMap<>();
+        cpu = new i8080();
         try {
             System.out.println( args[0]);
             filename = args[0];

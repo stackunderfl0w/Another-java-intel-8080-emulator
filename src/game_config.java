@@ -1,3 +1,4 @@
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
 public class game_config extends ports{
@@ -58,24 +59,23 @@ public class game_config extends ports{
         //constructor
         //makes sure keys needed are present in hashmap
         System.out.println("Input/output ports Initialized");
-        key.put("Space",0);
-        key.put("A",0);
-        key.put("D",0);
-        key.put("O",0);
-        key.put("C",0);
-        key.put("␣",0);
+        Main.key.put(KeyEvent.VK_SPACE,0);
+        Main.key.put(KeyEvent.VK_A,0);
+        Main.key.put(KeyEvent.VK_D,0);
+        Main.key.put(KeyEvent.VK_O,0);
+        Main.key.put(KeyEvent.VK_C,0);
 
-        key.put("Left",0);
-        key.put("Right",0);
-        key.put("Insert",0);
-        key.put("P",0);
+        Main.key.put(KeyEvent.VK_LEFT,0);
+        Main.key.put(KeyEvent.VK_RIGHT,0);
+        Main.key.put(KeyEvent.VK_INSERT,0);
+        Main.key.put(KeyEvent.VK_P,0);
 
     }
     public int in(int port){
         switch(port){
             case 1:
                 get_key();
-                System.out.println(coin+(two_player_button<<1)+(one_player_button<<2)+(1<<3)+(player_one_fire<<4) +(player_one_left<<5)+(player_one_right<<6));
+                //System.out.println(coin+(two_player_button<<1)+(one_player_button<<2)+(1<<3)+(player_one_fire<<4) +(player_one_left<<5)+(player_one_right<<6));
                 return coin+(two_player_button<<1)+(one_player_button<<2)+(1<<3)+(player_one_fire<<4) +(player_one_left<<5)+(player_one_right<<6);
             case 2:
                 return extra_ships+(extra_ship_location<<3)+(player_two_fire<<4)+(player_two_left<<5)+(player_two_right<<6)+(display_coin_in_demo<<7);
@@ -128,18 +128,18 @@ public class game_config extends ports{
         //just in case keys are not in hashmap
         try
         {
-            key=super.key;
-            System.out.println(key);
-            player_one_fire = key.get("Space")|key.get("␣");
-            player_one_left = key.get("A");
-            player_one_right = key.get("D");
-            one_player_button = key.get("O");
-            coin = key.get("C");
-            player_two_fire = key.get("Insert");
-            player_two_left = key.get("Left");
-            player_two_right = key.get("Right");
-            two_player_button = key.get("P");
-            System.out.println(key);
+            //key=super.key;
+            //System.out.println(Main.key);
+            player_one_fire = Main.key.get(KeyEvent.VK_SPACE);
+            player_one_left = Main.key.get(KeyEvent.VK_A);
+            player_one_right = Main.key.get(KeyEvent.VK_D);
+            one_player_button = Main.key.get(KeyEvent.VK_O);
+            coin = Main.key.get(KeyEvent.VK_C);
+            player_two_fire = Main.key.get(KeyEvent.VK_INSERT);
+            player_two_left = Main.key.get(KeyEvent.VK_LEFT);
+            player_two_right = Main.key.get(KeyEvent.VK_RIGHT);
+            two_player_button = Main.key.get(KeyEvent.VK_P);
+            //System.out.println(Main.key);
         }
         catch(Exception f)
         {

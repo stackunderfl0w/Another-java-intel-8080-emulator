@@ -1210,7 +1210,7 @@ public class i8080 extends processor{
     }
     public void save_state(){
 
-        state=Arrays.copyOf(memory,memory.length+16);
+        state=Arrays.copyOf(memory,memory.length+17);
         state[memory.length+1]=a;
         state[memory.length+2]=b;
         state[memory.length+3]=c;

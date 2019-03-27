@@ -3,9 +3,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 public class z80 extends processor{
     //set up cpu registers memory and flags as variables
-    protected int[] memory = new int[0x8000];
+    private int[] memory = new int[0x8000];
     private boolean debug_mode=false;
-    public boolean cpm_mode=false;
+    private boolean cpm_mode=false;
 
     private int[]par_table=new int []{1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1};
     private int a;
@@ -41,21 +41,21 @@ public class z80 extends processor{
     private boolean sign_prime;
 
     //public int breakpoint = 9565000;
-    public long breakpoint = 1990000;
+    private long breakpoint = 1990000;
 
-    public boolean breakpoint_enabled=false;
-    public boolean interrupt_enabled=false;
-    public int pc;
-    public long tc=0;
+    private boolean breakpoint_enabled=false;
+    private boolean interrupt_enabled=false;
+    private int pc;
+    private long tc=0;
     private int bc;
     private int de;
     private int hl;
     private int z;
-    public int cycles=0;
+    private int cycles=0;
     //variable for which keys are pressed
-    public HashMap<String, Integer> key = new HashMap<>();
+    private HashMap<String, Integer> key = new HashMap<>();
     //initialize game specif serial ports setup
-    public ports ports;
+    private ports ports;
     //private int[]cycle_table = new int []{4,  10, 7,  5,  5,  5,  7,  4,  4 , 10, 7,  5,  5,  5,  7,  4, 4,  10, 7,  5,  5,  5,  7,  4,  4,  10, 7,  5,  5,  5,  7,  4, 4,  10, 16, 5,  5,  5,  7,  4,  4,  10, 16, 5,  5,  5,  7,  4, 4,  10, 13, 5,  10, 10, 10, 4,  4,  10, 13, 5,  5,  5,  7,  4, 5,  5,  5,  5,  5,  5,  7,  5,  5,  5,  5,  5,  5,  5,  7,  5, 5,  5,  5,  5,  5,  5,  7,  5,  5,  5,  5,  5,  5,  5,  7,  5, 5,  5,  5,  5,  5,  5,  7,  5,  5,  5,  5,  5,  5,  5,  7,  5, 7,  7,  7,  7,  7,  7,  7,  7,  5,  5,  5,  5,  5,  5,  7,  5, 4,  4,  4,  4,  4,  4,  7,  4,  4,  4,  4,  4,  4,  4,  7,  4, 4,  4,  4,  4,  4,  4,  7,  4,  4,  4,  4,  4,  4,  4,  7,  4, 4,  4,  4,  4,  4,  4,  7,  4,  4,  4,  4,  4,  4,  4,  7,  4, 4,  4,  4,  4,  4,  4,  7,  4,  4,  4,  4,  4,  4,  4,  7,  4, 11, 10, 10, 10, 17, 11, 7,  11, 11, 10, 10, 10, 10, 17, 7,  11, 11, 10, 10, 10, 17, 11, 7,  11, 11, 10, 10, 10, 10, 17, 7,  11, 11, 10, 10, 18, 17, 11, 7,  11, 11, 5,  10, 5,  17, 17, 7,  11, 11, 10, 10, 4,  17, 11, 7,  11, 11, 5,  10, 4,  17, 17, 7,  11};
     //table for how many cycles each instruction takes
     //public int[]cycle_table = new int []{4,10,7,6,5,5,7,4,0,11,7,6,5,5,7,4      ,4,10,7,6,5,5,7,4,4,11,7,6,5,5,7,4      ,4,10,16,6,5,5,7,4,4,11,16,6,5,5,7,4        ,4,10,13,6,10,10,10,4,4,11,13,6,5,5,7,4     ,5,5,5,5,5,5,7,5,5,5,5,5,5,5,7,5        ,5,5,5,5,5,5,7,5,5,5,5,5,5,5,7,5    ,5,5,5,5,5,5,7,5,5,5,5,5,5,5,7,5    ,7,7,7,7,7,7,7,7,5,5,5,5,5,5,7,5    ,4,4,4,4,4,4,7,4,4,4,4,4,4,4,7,4    ,4,4,4,4,4,4,7,4,4,4,4,4,4,4,7,4    ,4,4,4,4,4,4,7,4,4,4,4,4,4,4,7,4    ,4,4,4,4,4,4,7,4,4,4,4,4,4,4,7,4    ,11,10,15,10,18,11,7,11,11,10,15,00,18,17,7,11      ,11,10,15,10,18,11,7,11,11,4,15,10,18,4,7,11    ,11,10,15,4,18,11,7,11,11,4,10,4,18,11,7,11     ,11,10,15,4,18,11,7,11,11,6,15,4,18,4,7,11};
