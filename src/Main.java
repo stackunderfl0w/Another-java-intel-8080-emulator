@@ -18,10 +18,11 @@ public class Main {
 
     //setting up variables
     private static long[] last_frame = new long[60];
+    public static long last_fps_update;
+    public static long next_frame;
     public static Screen screen;
-    public static keylistener keyboard =new keylistener();
-    public static JFrame f = new JFrame("Java 8080 emulator Patrick Iacob");
-    private static double fps;
+    private static keylistener keyboard =new keylistener();
+    public static JFrame f = new JFrame("Java 8080 emulator Stackunderfl0w");
     public static double max_fps=60;
     public static processor cpu;
     public static String[] messages= {"","","","","","","","","",""};
@@ -72,13 +73,14 @@ public class Main {
         int frames=0;
         while(true){
             //makes sure the game runs at the correct speed
-            if ( System.nanoTime() - last_frame[0] > 1000000000/max_fps){
+            if ( System.nanoTime() >next_frame){
                 //fps counter
-                fps=round(1000000000.0/(System.nanoTime()-last_frame[59])*60,2);
+                double fps =round(1000000000.0/(System.nanoTime()-last_frame[59])*60,2);
                 //add fps to title of window
                 frames++;
-                if (frames>=max_fps/6) {
-                    f.setTitle("Java 8080 emulator Patrick Iacob (fps, " + fps + ", " + round(100 * fps / 60, 1) + "%)");
+                if (System.nanoTime()-last_fps_update>1000000000/2) {
+                    last_fps_update=System.nanoTime();
+                    f.setTitle("Java 8080 emulator Stackunderfl0w (fps, " + fps + ", " + round(100 * fps / 60, 1) + "%)");
                     frames=0;
                 }//reset time since last frame
                 for (int i=59;i>0;i--){
@@ -97,15 +99,14 @@ public class Main {
                 }
                 cpu.set_cycles(cpu.get_cycles()-cycles_per_frame);
                 cpu.run_interrupt(0xd7);
-                //System.out.println(cpu.tc)
                 //updates screen
                 f.repaint();
                 //System.out.println(cpu.tc);
                 //System.out.println("Number of active threads from the given thread: " + Thread.activeCount());
+                next_frame=last_frame[0]+1000000000/(int)max_fps+1;
             }
-            //System.out.println((System.nanoTime()-last_frame[0])/1000000);
-            //sleep(((last_frame[0]+1000000000/(long)max_fps)-System.nanoTime())/10000000);
-            if((last_frame[0]+1000000000/(long)max_fps)-System.nanoTime()>1000000){
+            //sleep if there is time
+            if(next_frame-System.nanoTime()>2000000){
                 sleep(1);
             }
             //System.out.println(System.nanoTime()-last_frame[0]);
@@ -114,9 +115,13 @@ public class Main {
     }
     //load game to memory
     private static void load_game(String game){
+        load_game(game,0);
+    }
+    //load game to memory starting at location adr
+    private static void load_game(String game, int adr){
         int d=0;
         for (int o = 0; o < (game.length()+1)/3; o++){
-            cpu.memory[o] = Integer.parseInt(game.substring(o*3,o*3+2),16);d++;
+            cpu.memory[o+adr] = Integer.parseInt(game.substring(o*3,o*3+2),16);d++;
         }
         System.out.println(d);
     }
@@ -182,14 +187,6 @@ public class Main {
         }
         System.out.println("\nRom loaded");
     }
-    //load game to memory starting at location adr
-    private static void load_game(String game, int adr){
-        int d=0;
-        for (int o = 0; o < (game.length()+1)/3; o++){
-            cpu.memory[o+adr] = Integer.parseInt(game.substring(o*3,o*3+2),16);d++;
-        }
-        System.out.println(d);
-    }
     //round number to x decimal places
     private static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
@@ -210,12 +207,12 @@ public class Main {
         //System.out.println(Arrays.toString(messages));
         //System.out.println(Arrays.toString(time_left));
     }
-    public static String hex(int x){
+    private static String hex(int x){
         String r=(String.format("%x",x));
         if (r.length()==1){r="0"+r;}
         return r;
     }
-    public static void sleep(long x){
+    private static void sleep(long x){
         try {
             Thread.sleep(x);
         }
