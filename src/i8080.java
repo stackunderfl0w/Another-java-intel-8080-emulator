@@ -2,7 +2,7 @@
 import java.util.Arrays;
 public class i8080 extends processor{
     //set up cpu registers memory and flags as variables
-    protected int[] memory = new int[0x8000];
+    protected int[] memory = new int[0x10000];
     private boolean debug_mode=false;
     public boolean cpm_mode=false;
 
@@ -86,12 +86,10 @@ public class i8080 extends processor{
                 if(c==9){
                     int ofset = (d<<8)+e;
                     int z=0;
-                    while((char)memory[ofset+3+z]!='$'){
-                        System.out.print((char)memory[ofset+3+z]);
+                    while((char)memory[ofset+z]!='$'){
+                        System.out.print((char)memory[ofset+z]);
                         z++;
                     }
-                    System.out.println(pc);
-
                 }
                 else if (c==2){
                     System.out.print((char)e);
@@ -127,7 +125,7 @@ public class i8080 extends processor{
 
     }
     public void run_interrupt(int opcode) {
-        if (interrupt_enabled){
+        if (false){
             run_op(opcode,0,0);
             pc++;
         }
@@ -1364,10 +1362,11 @@ public class i8080 extends processor{
     //calls memory location
     private void call(int x){
         pc++;
-        memory[(sp-1)]=pc>>8;
-        memory[(sp-2)]=(pc)&0xff;
+        write_memory((sp-1)&0xffff,pc>>8);
+        write_memory((sp-2)&0xffff,(pc)&0xff);
         pc=x-1;
         sp-=2;
+        sp&=0xffff;
     }
     //returns from call function
     private void ret(){
@@ -1399,11 +1398,9 @@ public class i8080 extends processor{
     }
     private void write_memory(int adr, int value){
         if((h<<8)+l>=0x2000|cpm_mode) {
+
             memory[adr] = value;
         }
-    }
-    public void write_rom(int adr, int value){
-        memory[adr] = value;
     }
     public void set_breakpoint(long brk){
         breakpoint_enabled=true;

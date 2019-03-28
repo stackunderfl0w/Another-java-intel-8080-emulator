@@ -8,7 +8,7 @@ import java.util.Enumeration;
 import java.io.File;
 import java.util.HashMap;
 public class Main {
-    private static long clock_speed=2000000;
+    private static long clock_speed=200000000;
     private static int cycles_per_frame= (int)((clock_speed+60)/60);
     public static HashMap<String, Integer> game_config = new HashMap<>();
     public static HashMap<Integer, Integer> key;

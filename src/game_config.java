@@ -33,7 +33,6 @@ public class game_config extends ports{
                 game_config.put("invaders.g", 0x800);
                 game_config.put("invaders.f", 0x1000);
                 game_config.put("invaders.e", 0x1800);
-                Main.game_config = game_config;
                 break;
             case "lrescue.zip":
                 game_config.put("lrescue.1",0);
@@ -52,10 +51,11 @@ public class game_config extends ports{
                 game_config.put("tn05-1",0x4000);
                 break;
             default:
-                System.out.println("No config found for\""+game+"\", Exiting");
-                System.exit(404);
+                System.out.println("No config found for\""+game+"\"");
+                //System.exit(404);
                 break;
         }
+        Main.game_config = game_config;
         //constructor
         //makes sure keys needed are present in hashmap
         System.out.println("Input/output ports Initialized");

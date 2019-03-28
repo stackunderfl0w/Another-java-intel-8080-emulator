@@ -6,7 +6,6 @@ abstract class processor{
     abstract void save_state();
     abstract void load_state();
     abstract void set_breakpoint(long brk);
-    abstract void write_rom(int adr, int value);
     abstract int read_memory(int adr);
     abstract int get_cycles();
     abstract void set_cycles(int c);
