@@ -2,7 +2,7 @@
 import java.util.Arrays;
 public class i8080 extends processor{
     //set up cpu registers memory and flags as variables
-    protected int[] memory = new int[0x10000];
+    protected int[] memory = new int[0x8000];
     private boolean debug_mode=false;
     public boolean cpm_mode=false;
 
@@ -41,7 +41,6 @@ public class i8080 extends processor{
     public int[]cycle_table = new int []{4,10,7,6,5,5,7,4,0,11,7,6,5,5,7,4      ,4,10,7,6,5,5,7,4,4,11,7,6,5,5,7,4      ,4,10,16,6,5,5,7,4,4,11,16,6,5,5,7,4        ,4,10,13,6,10,10,10,4,4,11,13,6,5,5,7,4     ,5,5,5,5,5,5,7,5,5,5,5,5,5,5,7,5        ,5,5,5,5,5,5,7,5,5,5,5,5,5,5,7,5    ,5,5,5,5,5,5,7,5,5,5,5,5,5,5,7,5    ,7,7,7,7,7,7,7,7,5,5,5,5,5,5,7,5    ,4,4,4,4,4,4,7,4,4,4,4,4,4,4,7,4    ,4,4,4,4,4,4,7,4,4,4,4,4,4,4,7,4    ,4,4,4,4,4,4,7,4,4,4,4,4,4,4,7,4    ,4,4,4,4,4,4,7,4,4,4,4,4,4,4,7,4    ,11,10,15,10,18,11,7,11,11,10,15,00,18,17,7,11      ,11,10,15,10,18,11,7,11,11,4,15,10,18,4,7,11    ,11,10,15,4,18,11,7,11,11,4,10,4,18,11,7,11     ,11,10,15,4,18,11,7,11,11,6,15,4,18,4,7,11};
     //run 1 emulated cycle
     public void setup(String files){
-        ports= new game_config(files);
         if(files.toLowerCase().contains(".com")){
             cpm_mode=true;
         }
@@ -125,7 +124,7 @@ public class i8080 extends processor{
 
     }
     public void run_interrupt(int opcode) {
-        if (false){
+        if (interrupt_enabled){
             run_op(opcode,0,0);
             pc++;
         }
@@ -1207,7 +1206,7 @@ public class i8080 extends processor{
     }
     public void save_state(){
 
-        state=Arrays.copyOf(memory,memory.length+17);
+        state=Arrays.copyOf(memory,memory.length+18);
         state[memory.length+1]=a;
         state[memory.length+2]=b;
         state[memory.length+3]=c;
@@ -1224,7 +1223,8 @@ public class i8080 extends processor{
         if(interrupt_enabled){state[memory.length+14]=1;}
         state[memory.length+15]=pc;
         state[memory.length+16]=cycles;
-    }
+        state[memory.length+17]=Main.interrupt;
+}
     public void load_state(){
         memory=(Arrays.copyOf(state,memory.length));
         a=state[memory.length+1];
@@ -1243,6 +1243,7 @@ public class i8080 extends processor{
         interrupt_enabled=state[memory.length+14]==1;
         pc=state[memory.length+15];
         cycles=state[memory.length+16];
+        Main.interrupt=state[memory.length+17];
     }
     //pause program
     public void sleep(long x){
@@ -1362,8 +1363,8 @@ public class i8080 extends processor{
     //calls memory location
     private void call(int x){
         pc++;
-        write_memory((sp-1)&0xffff,pc>>8);
-        write_memory((sp-2)&0xffff,(pc)&0xff);
+        memory[(sp-1)&0xffff]=pc>>8;
+        memory[(sp-2)&0xffff]=(pc)&0xff;
         pc=x-1;
         sp-=2;
         sp&=0xffff;

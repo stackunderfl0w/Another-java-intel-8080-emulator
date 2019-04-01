@@ -23,6 +23,7 @@ public class game_config extends ports{
     private int x;
     public HashMap<String, Integer> game_config = new HashMap<>();
     public HashMap<String, Integer> key = new HashMap<>();
+    private int[] interrupts;
 
     game_config(String game){
         game=game.substring(game.lastIndexOf('/')+1);
@@ -33,6 +34,8 @@ public class game_config extends ports{
                 game_config.put("invaders.g", 0x800);
                 game_config.put("invaders.f", 0x1000);
                 game_config.put("invaders.e", 0x1800);
+                interrupts=new int[]{0xcf,0xd7};
+
                 break;
             case "lrescue.zip":
                 game_config.put("lrescue.1",0);
@@ -41,6 +44,7 @@ public class game_config extends ports{
                 game_config.put("lrescue.4",0x1800);
                 game_config.put("lrescue.5",0x4000);
                 game_config.put("lrescue.6",0x4800);
+                interrupts=new int[]{0xcf,0xd7};
                 break;
             case "ballbomb.zip":
                 game_config.put("tn01",0);
@@ -49,12 +53,14 @@ public class game_config extends ports{
                 game_config.put("tn04",0x1800);
                 game_config.put("tn05",0x4000);
                 game_config.put("tn05-1",0x4000);
+                interrupts=new int[]{0xcf,0xd7};
                 break;
             default:
                 System.out.println("No config found for\""+game+"\"");
                 //System.exit(404);
                 break;
         }
+        Main.interrupts=interrupts;
         Main.game_config = game_config;
         //constructor
         //makes sure keys needed are present in hashmap

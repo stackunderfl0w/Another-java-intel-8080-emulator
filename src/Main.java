@@ -8,7 +8,7 @@ import java.util.Enumeration;
 import java.io.File;
 import java.util.HashMap;
 public class Main {
-    private static long clock_speed=200000000;
+    private static long clock_speed=2000000;
     private static int cycles_per_frame= (int)((clock_speed+60)/60);
     public static HashMap<String, Integer> game_config = new HashMap<>();
     public static HashMap<Integer, Integer> key;
@@ -27,7 +27,10 @@ public class Main {
     public static processor cpu;
     public static String[] messages= {"","","","","","","","","",""};
     public static int[] time_left= new int[10];
-    public static ports ports;
+    public static game_config config;
+    public static int[] interrupts= new int[0];
+    public static int interrupt;
+    public static boolean screen_enabled;
     public static void main(String[] args) {
         key = new HashMap<>();
         cpu = new i8080();
@@ -36,22 +39,24 @@ public class Main {
             filename = args[0];
         }
         catch(Exception f) {
-            f.printStackTrace(System.out);
+            //f.printStackTrace(System.out);
         }
-        ports=new game_config(filename);
+        config=new game_config(filename);
         //setting up jframe for graphics
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        screen = new Screen();
-        f.add(screen);
-        f.addKeyListener(keyboard);
+        if (screen_enabled) {
+            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            screen = new Screen();
+            f.add(screen);
+            f.addKeyListener(keyboard);
 
-        f.pack();
-        f.setFocusable(true);
-        f.setVisible(true);
-        f.setFocusable(true);
-        f.requestFocusInWindow();
+            f.pack();
+            f.setFocusable(true);
+            f.setVisible(true);
+            f.setFocusable(true);
+            f.requestFocusInWindow();
+        }
         cpu.setup(filename);
-        System.out.println("Config loaded: " + filename);
+        System.out.println("Config loaded: " + filename.substring(filename.lastIndexOf('/')+1));
         System.out.println(game_config);
         load_rom(filename);
         cpu.setup(filename);
@@ -88,8 +93,18 @@ public class Main {
                 }
                 last_frame[0]=System.nanoTime();
 
+                interrupt =0;
+                while (interrupt<interrupts.length){
+                    while (cpu.get_cycles()<cycles_per_frame/interrupts.length){
+                        cpu.cycle();
+                    }
+                    cpu.run_interrupt(interrupts[interrupt]);
+                    interrupt++;
+                }
+
                 //run exact amount of instructions till next interupt
-                while (cpu.get_cycles()<cycles_per_frame/2){
+
+                /*while (cpu.get_cycles()<cycles_per_frame/2){
                     cpu.cycle();
                 }
                 //if the cpu has enabled interrupts they will be run
@@ -97,8 +112,9 @@ public class Main {
                 while (cpu.get_cycles()<cycles_per_frame){
                     cpu.cycle();
                 }
+                cpu.run_interrupt(0xd7);*/
                 cpu.set_cycles(cpu.get_cycles()-cycles_per_frame);
-                cpu.run_interrupt(0xd7);
+
                 //updates screen
                 f.repaint();
                 //System.out.println(cpu.tc);
