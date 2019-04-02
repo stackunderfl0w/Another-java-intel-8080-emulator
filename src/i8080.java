@@ -1197,6 +1197,7 @@ public class i8080 extends processor{
                 //enable/ disable interrupts
             case 0xf3:if (debug_mode){System.out.println("Di");}
                 interrupt_enabled=false;
+                break;
             case 0xfb:if (debug_mode){System.out.println("El");}
                 interrupt_enabled=true;
                 break;
