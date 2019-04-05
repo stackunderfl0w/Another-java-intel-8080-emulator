@@ -30,7 +30,7 @@ public class Main {
     public static game_config config;
     public static int[] interrupts= new int[0];
     public static int interrupt;
-    public static boolean screen_enabled;
+    public static boolean screen_enabled=true;
     public static void main(String[] args) {
         key = new HashMap<>();
         cpu = new i8080();

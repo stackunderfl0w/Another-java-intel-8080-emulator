@@ -57,6 +57,7 @@ public class game_config extends ports{
                 break;
             default:
                 System.out.println("No config found for\""+game+"\"");
+                interrupts=new int[]{0};
                 //System.exit(404);
                 break;
         }

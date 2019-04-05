@@ -2,7 +2,7 @@
 import java.util.Arrays;
 public class i8080 extends processor{
     //set up cpu registers memory and flags as variables
-    protected int[] memory = new int[0x8000];
+    protected int[] memory = new int[0x10000];
     private boolean debug_mode=false;
     public boolean cpm_mode=false;
 
@@ -58,8 +58,15 @@ public class i8080 extends processor{
     public void cycle(){
         //load next memory as instrctions
         int opcode=memory[pc];
-        int d8=memory[pc+1];
-        int op3=memory[pc+2];
+        int d8;
+        int op3;
+        try {
+            d8 = memory[pc + 1];
+            op3 = memory[pc + 2];
+        }catch(Exception e){
+            d8=0;
+            op3=0;
+        }
         //debuging info
         if (debug_mode){
             System.out.println("True counter:"+tc);
@@ -506,7 +513,7 @@ public class i8080 extends processor{
             case 0x2c:if (debug_mode){System.out.println("Inr l");}
                 l++;
                 check_carry(l);
-                if (c>=256){l-=256;}
+                if (l>=256){l-=256;}
                 check_zero(l);
                 check_sign(l);
                 check_parity(l);
@@ -979,7 +986,7 @@ public class i8080 extends processor{
                 cycles-=5;
                 break;
             case 0xc3:if (debug_mode){System.out.println("Jmp $"+hex(d16));}
-                pc=d16-1;
+                jump(d16);
                 break;
             case 0xca:if (debug_mode){System.out.println("Jz $"+hex(d16));}
                 if (zero){jump(d16);break;}
