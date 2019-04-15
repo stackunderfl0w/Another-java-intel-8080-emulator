@@ -94,6 +94,7 @@ public class Main {
                 last_frame[0]=System.nanoTime();
 
                 interrupt =0;
+                //run exact amount of instructions till next interupt
                 while (interrupt<interrupts.length){
                     while (cpu.get_cycles()<cycles_per_frame/interrupts.length){
                         cpu.cycle();
@@ -101,20 +102,7 @@ public class Main {
                     cpu.run_interrupt(interrupts[interrupt]);
                     interrupt++;
                 }
-
-                //run exact amount of instructions till next interupt
-
-                /*while (cpu.get_cycles()<cycles_per_frame/2){
-                    cpu.cycle();
-                }
-                //if the cpu has enabled interrupts they will be run
-                cpu.run_interrupt(0xcf);
-                while (cpu.get_cycles()<cycles_per_frame){
-                    cpu.cycle();
-                }
-                cpu.run_interrupt(0xd7);*/
                 cpu.set_cycles(cpu.get_cycles()-cycles_per_frame);
-
                 //updates screen
                 f.repaint();
                 //System.out.println(cpu.tc);
