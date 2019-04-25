@@ -43,8 +43,11 @@ class Screen extends JPanel{
         } else {
             g.setColor(Color.BLACK);
         }
-
-        g.fillRect(x * scale, y * scale, scale, scale);
+        int newx=(int)(x*width/224.0);
+        int newy=(int)(y*height/256.0);
+        int pixelwidth=(int)(((x+1)*width/224.0)-newx);
+        int pixelheight=(int)(((y+1)*height/256.0)-newy);
+        g.fillRect(newx, newy, pixelwidth, pixelheight);
 
     }
 
@@ -52,7 +55,8 @@ class Screen extends JPanel{
      * Paints full screen from screen memory.
      */
     private void paintFullScreen() {
-
+        width=getWidth();
+        height=getHeight();
         for (int y = 0; y < 224; y++) {
             for (int x = 0; x < 32; x++) {
                 for (int z = 0; z<8;z++){
