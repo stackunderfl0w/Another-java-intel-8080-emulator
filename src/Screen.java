@@ -98,28 +98,30 @@ class Screen extends JPanel{
     //audio player
     //synchronized as to not freeze screen while playing audio
     public synchronized void playAudio(final String url) {
-        new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing, see comments
-            public void run() {
-                try {
-                    //gets audio file and starts playing
-                    BufferedInputStream myStream = new BufferedInputStream(getClass().getResourceAsStream(url));
-                    Clip clip = AudioSystem.getClip();
-                    AudioInputStream audio2 = AudioSystem.getAudioInputStream(myStream);
-                    clip.open(audio2);
-                    clip.start();
-                    clip.addLineListener( new LineListener() {
-                        public void update(LineEvent evt) {
-                            if (evt.getType() == LineEvent.Type.STOP) {
-                                evt.getLine().close();
+        if (Main.sound_enabled) {
+            new Thread(new Runnable() { // the wrapper thread is unnecessary, unless it blocks on the Clip finishing, see comments
+                public void run() {
+                    try {
+                        //gets audio file and starts playing
+                        BufferedInputStream myStream = new BufferedInputStream(getClass().getResourceAsStream(url));
+                        Clip clip = AudioSystem.getClip();
+                        AudioInputStream audio2 = AudioSystem.getAudioInputStream(myStream);
+                        clip.open(audio2);
+                        clip.start();
+                        clip.addLineListener(new LineListener() {
+                            public void update(LineEvent evt) {
+                                if (evt.getType() == LineEvent.Type.STOP) {
+                                    evt.getLine().close();
+                                }
                             }
-                        }
-                    });
+                        });
 
-                } catch (Exception e) {
-                    System.out.println(e);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
                 }
-            }
-        }).start();
+            }).start();
+        }
     }
     private void paint_string(String s, int x, int y, int size, Color colour){
         //create new font with new size

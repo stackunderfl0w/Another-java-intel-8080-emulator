@@ -33,6 +33,7 @@ public class Main {
     public static int[] interrupts= new int[0];
     public static int interrupt;
     public static boolean screen_enabled=true;
+    public static boolean sound_enabled;
     public static void main(String[] args) {
         key = new HashMap<>();
         cpu = new i8080();
@@ -85,7 +86,7 @@ public class Main {
                 //add fps to title of window
                 if (System.nanoTime()-last_fps_update>1000000000/2) {
                     last_fps_update=System.nanoTime();
-                    f.setTitle("Java 8080 emulator Stackunderfl0w (fps, " + fps + ", " + round(100 * fps / 60, 1) + "%)"+"gpu fps("+frames_completed+")");
+                    f.setTitle("Java 8080 emulator Stackunderfl0w (fps, " + fps + ", " + round(100 * fps / 60, 1) + "%)"+"gpu fps("+frames_completed*2+")");
                     frames_completed=0;
                 }//reset time since last frame
                 System.arraycopy(last_frame, 0, last_frame, 1, 59);
