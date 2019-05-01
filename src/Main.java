@@ -12,6 +12,8 @@ public class Main {
     private static int cycles_per_frame= (int)((clock_speed+60)/60);
     public static HashMap<String, Integer> game_config = new HashMap<>();
     public static HashMap<Integer, Integer> key;
+    private static int cpu_frames_completed;
+    public static int frames_completed;
 
 
     private static String filename="games/invaders.zip";
@@ -75,22 +77,18 @@ public class Main {
     }
     private static void start(){
         send_message("Game loaded("+filename+")",180);
-        int frames=0;
         while(true){
             //makes sure the game runs at the correct speed
             if ( System.nanoTime() >next_frame){
                 //fps counter
                 double fps =round(1000000000.0/(System.nanoTime()-last_frame[59])*60,2);
                 //add fps to title of window
-                frames++;
                 if (System.nanoTime()-last_fps_update>1000000000/2) {
                     last_fps_update=System.nanoTime();
-                    f.setTitle("Java 8080 emulator Stackunderfl0w (fps, " + fps + ", " + round(100 * fps / 60, 1) + "%)");
-                    frames=0;
+                    f.setTitle("Java 8080 emulator Stackunderfl0w (fps, " + fps + ", " + round(100 * fps / 60, 1) + "%)"+"gpu fps("+frames_completed+")");
+                    frames_completed=0;
                 }//reset time since last frame
-                for (int i=59;i>0;i--){
-                    last_frame[i]=last_frame[i-1];
-                }
+                System.arraycopy(last_frame, 0, last_frame, 1, 59);
                 last_frame[0]=System.nanoTime();
 
                 interrupt =0;
@@ -108,6 +106,8 @@ public class Main {
                 //System.out.println(cpu.tc);
                 //System.out.println("Number of active threads from the given thread: " + Thread.activeCount());
                 next_frame=last_frame[0]+1000000000/(int)max_fps+1;
+                cpu_frames_completed++;
+                System.out.println(cpu_frames_completed+" "+frames_completed);
             }
             //sleep if there is time
             if(next_frame-System.nanoTime()>2000000){

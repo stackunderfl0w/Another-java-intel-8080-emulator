@@ -87,11 +87,13 @@ class Screen extends JPanel{
         g.setColor(Color.GRAY);
 
         g.fillRect(0, 0, width, height);
+        //long starttime=System.nanoTime();
 
         paintFullScreen();
+        //System.out.println(System.nanoTime()-starttime);
 
         print_messages();
-
+        Main.frames_completed++;
     }
     //audio player
     //synchronized as to not freeze screen while playing audio
