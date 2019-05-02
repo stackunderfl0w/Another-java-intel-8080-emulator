@@ -11,6 +11,8 @@ class Screen extends JPanel{
     private int scale = 3; //10 pixels for each emulated-system pixel.
     private int width = 224 * scale;
     private int height = 256 * scale;
+    private int last_pixel;
+    private Color last_color;
     //Random random = new Random();
     //long z = 0;
     //setup audio variables
@@ -36,18 +38,21 @@ class Screen extends JPanel{
     //(the game is black and while, but the arcade version had a colored overlay)
     public void paintPixel(boolean white, int x, int y) {
         if (white) {
-            if (y>32&y<=64){g.setColor(Color.RED);}
-            else if(y > 184 && y <= 240 && x >= 0 && x <= 223){g.setColor(Color.GREEN);}
-            else if (y > 238 & y <= 256 & x >= 16 && x < 132){g.setColor(Color.GREEN);}
-            else{g.setColor(Color.WHITE);}
-        } else {
-            g.setColor(Color.BLACK);
+            if (y > 32 & y <= 64) {
+                g.setColor(Color.RED);
+            } else if (y > 184 && y <= 240 && x >= 0 && x <= 223) {
+                g.setColor(Color.GREEN);
+            } else if (y > 238 & y <= 256 & x >= 16 && x < 132) {
+                g.setColor(Color.GREEN);
+            } else {
+                g.setColor(Color.WHITE);
+            }
+            int newx = (int) (x * width / 224.0);
+            int newy = (int) (y * height / 256.0);
+            int pixelwidth = (int) (((x + 1) * width / 224.0) - newx);
+            int pixelheight = (int) (((y + 1) * height / 256.0) - newy);
+            g.fillRect(newx, newy, pixelwidth, pixelheight);
         }
-        int newx=(int)(x*width/224.0);
-        int newy=(int)(y*height/256.0);
-        int pixelwidth=(int)(((x+1)*width/224.0)-newx);
-        int pixelheight=(int)(((y+1)*height/256.0)-newy);
-        g.fillRect(newx, newy, pixelwidth, pixelheight);
 
     }
 
@@ -84,7 +89,7 @@ class Screen extends JPanel{
         this.g = g;
 
         // Draw background
-        g.setColor(Color.GRAY);
+        g.setColor(Color.BLACK);
 
         g.fillRect(0, 0, width, height);
         //long starttime=System.nanoTime();
